@@ -1,3 +1,7 @@
+### 3.x-dev
+
+  * Added ByteBufferHandler which buffers records like BufferHandler but caps the buffer by the cumulated serialized size of the records in bytes instead of by record count
+
 ### 3.12.0 (2026-09-09)
 
   * Added support for reading the timestamp of new records from a PSR-20 clock, via a new `$clock` constructor param and `Logger::setClock()` (#2065)

@@ -118,6 +118,11 @@
   handler it wraps with all the log messages at once. This is very useful to
   send an email with all records at once for example instead of having one mail
   for every log record.
+- [_ByteBufferHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/ByteBufferHandler.php): This handler buffers log records like the
+  _BufferHandler_, but caps the buffer by the cumulated serialized size of the
+  records in bytes instead of by record count. When adding a record would exceed
+  the capacity, the buffer is either flushed first or the incoming record is
+  rejected, depending on the `$flushOnOverflow` flag.
 - [_GroupHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/GroupHandler.php): This handler groups other handlers. Every record received is
   sent to all the handlers it is configured with.
 - [_FilterHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FilterHandler.php): This handler only lets records of the given levels through
