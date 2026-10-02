@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Added `ChannelRoutingHandler` to route records to different handlers based on full-segment channel prefixes, with most-specific-match-wins, declaration-order tie-breaking and an optional fallback handler
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)

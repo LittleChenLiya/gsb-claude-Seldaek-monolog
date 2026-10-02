@@ -120,6 +120,11 @@
   for every log record.
 - [_GroupHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/GroupHandler.php): This handler groups other handlers. Every record received is
   sent to all the handlers it is configured with.
+- [_ChannelRoutingHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/ChannelRoutingHandler.php): This handler routes every record to exactly
+  one handler, chosen by the record's channel. Rules map a channel prefix to a handler and match on full
+  channel segments (`app` matches `app` and `app.web`, but not `application`); the most specific matching
+  prefix wins, ties are broken by declaration order, and an optional fallback handler receives records no
+  rule matches. See [channel-routing.md](channel-routing.md) for details.
 - [_FilterHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FilterHandler.php): This handler only lets records of the given levels through
    to the wrapped handler.
 - [_SamplingHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SamplingHandler.php): Wraps around another handler and lets you sample records
