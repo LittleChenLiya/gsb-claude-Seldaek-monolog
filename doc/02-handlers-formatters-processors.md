@@ -153,6 +153,40 @@
 - [_NormalizerFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/NormalizerFormatter.php): Normalizes objects/resources down to strings so a record can easily be serialized/encoded.
 - [_ScalarFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ScalarFormatter.php): Used to format log records into an associative array of scalar values.
 - [_JsonFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/JsonFormatter.php): Encodes a log record into json.
+- [_SafeJsonFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/SafeJsonFormatter.php): Encodes a log record into json without ever executing code embedded in the record data. Unlike JsonFormatter it never calls `__toString()`, `jsonSerialize()` or any getter on objects found in context/extra: only arrays and scalars are traversed, other objects are reported as a type marker such as `[object(ClassName)]`, resources as `[resource(stream)]`. Array recursion is bounded by separate depth, item-count and circular-reference truncation reports. Strings that are not valid UTF-8 are rendered as explicit `\xNN` byte escapes instead of being substituted or dropped, and the record datetime, level and channel are always reported with their real values. Use this when log context may contain untrusted objects (e.g. objects coming from user input or a shared object pool).
+
+  Configuration:
+
+  ```php
+  use Monolog\Formatter\SafeJsonFormatter;
+  use Monolog\Handler\StreamHandler;
+  use Monolog\Level;
+
+  $handler = new StreamHandler('php://stdout', Level::Warning);
+  $handler->setFormatter(new SafeJsonFormatter());
+  ```
+
+  The depth and item limits are inherited from `NormalizerFormatter` and can be tuned:
+
+  ```php
+  $formatter = new SafeJsonFormatter();
+  $formatter->setMaxNormalizeDepth(9);   // arrays nested deeper than this are truncated
+  $formatter->setMaxNormalizeItemCount(1000); // entries per array beyond this are truncated
+  ```
+
+  Short output example (context holding a malicious object, a resource and invalid UTF-8 bytes):
+
+  ```json
+  {"message":"hello","context":{"object":"[object(class@anonymous)]","resource":"[resource(stream)]","bad":"a\\xFFb"},"level":300,"level_name":"WARNING","channel":"app","datetime":"2024-01-02T03:04:05+00:00","extra":{}}
+  ```
+
+  Truncation reports use three distinct reasons:
+
+  ```json
+  {"context":{"deep":{"...":"Over 9 levels deep, aborting normalization"}}}
+  {"context":{"many":{"...":"Over 1000 items (1501 total), aborting normalization"}}}
+  {"context":{"circular":{"self":{"self":"Circular reference detected, aborting normalization"}}}}
+  ```
 - [_WildfireFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/WildfireFormatter.php): Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
 - [_ChromePHPFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ChromePHPFormatter.php): Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - [_GelfMessageFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GelfMessageFormatter.php): Used to format log records into Gelf message instances, only useful for the GelfHandler.
