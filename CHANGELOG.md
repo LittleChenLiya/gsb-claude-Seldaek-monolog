@@ -1,5 +1,8 @@
-### 3.12.1 (2026-09-29)
+### Unreleased
 
+  * Added `SafeJsonFormatter` which encodes records as JSON without ever calling `__toString`, `jsonSerialize` or object getters: objects/resources become explicit type markers, non-UTF-8 bytes are rendered as explicit `\xNN` escapes, and circular references / depth / item limits produce deterministic truncation reports with distinct machine-readable reasons
+
+### 3.12.1 (2026-09-29)
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)
   * Fixed `RedactingFormatter` letting secrets containing `&`, `<` or `>` through when wrapping an `HtmlFormatter` (#2069)
   * Fixed `SocketHandler` throwing the writing timeout immediately when the first write made no progress, instead of waiting for the configured timeout (#2071)

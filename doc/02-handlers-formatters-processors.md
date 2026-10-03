@@ -153,6 +153,7 @@
 - [_NormalizerFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/NormalizerFormatter.php): Normalizes objects/resources down to strings so a record can easily be serialized/encoded.
 - [_ScalarFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ScalarFormatter.php): Used to format log records into an associative array of scalar values.
 - [_JsonFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/JsonFormatter.php): Encodes a log record into json.
+- [_SafeJsonFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/SafeJsonFormatter.php): Encodes a log record into json without ever calling object methods (`__toString`, `jsonSerialize`, getters); objects/resources become explicit type markers and truncation is reported with machine-readable reasons, see [safe-json-formatter.md](safe-json-formatter.md).
 - [_WildfireFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/WildfireFormatter.php): Used to format log records into the Wildfire/FirePHP protocol, only useful for the FirePHPHandler.
 - [_ChromePHPFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/ChromePHPFormatter.php): Used to format log records into the ChromePHP format, only useful for the ChromePHPHandler.
 - [_GelfMessageFormatter_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Formatter/GelfMessageFormatter.php): Used to format log records into Gelf message instances, only useful for the GelfHandler.
