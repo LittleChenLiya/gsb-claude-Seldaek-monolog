@@ -133,6 +133,21 @@
   has accessors to read out the information.
 - [_HandlerWrapper_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/HandlerWrapper.php): A simple handler wrapper you can inherit from to create
  your own wrappers easily.
+- [_SpoolHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SpoolHandler.php): This handler persists every record to local segmented,
+  length-delimited and CRC32 checksummed spool files first, and delivers them
+  in order to the wrapped handler when `flush()` is called. The acknowledged
+  position is stored in an atomically replaced `ack.json` sidecar file, so a
+  restart skips confirmed records, truncates a torn trailing frame and stops
+  with a `SpoolCorruptionException` (reporting segment index and byte offset)
+  if a segment is otherwise damaged. Delivery is at-least-once: if the process
+  dies after the downstream succeeds but before the acknowledgement is written,
+  the record is delivered again on restart instead of being lost.
+  ```php
+  $spool = new \Monolog\Handler\SpoolHandler(__DIR__.'/spool', $someRemoteHandler);
+  $log->pushHandler($spool);
+  // periodically, or from a separate worker process:
+  $spool->flush();
+  ```
 - [_OverflowHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/OverflowHandler.php): This handler will buffer all the log messages it
   receives, up until a configured threshold of number of messages of a certain level is reached, after it will pass all
   log messages to the wrapped handler. Useful for applying in batch processing when you're only interested in significant

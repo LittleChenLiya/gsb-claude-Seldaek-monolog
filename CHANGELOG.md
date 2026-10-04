@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Added `SpoolHandler`, a durable at-least-once delivery handler that persists normalized records to local segmented, length-delimited and CRC32 checksummed files and forwards them in order to a wrapped handler on `flush()`; the acknowledged position is atomically stored, torn trailing frames are truncated on reopen and mid-segment corruption aborts delivery while reporting the exact segment index and byte offset
+
 ### 3.12.0 (2026-09-09)
 
   * Added support for reading the timestamp of new records from a PSR-20 clock, via a new `$clock` constructor param and `Logger::setClock()` (#2065)
