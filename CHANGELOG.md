@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Added `ContextBudgetProcessor` to cap the estimated UTF-8 byte size of a record's context to a configurable budget: entries are kept in original order while they fit, oversized entries (nested values as a whole) are dropped with a path/byte-size truncation summary in `extra`, values are never JSON-encoded and no user code is executed on objects
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)

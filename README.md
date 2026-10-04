@@ -68,6 +68,7 @@ $log->error('Bar');
 - [Utility Classes](doc/03-utilities.md)
 - [Extending Monolog](doc/04-extending.md)
 - [Log Record Structure](doc/message-structure.md)
+- [ContextBudgetProcessor: byte budgeting for log context](doc/context-budget-processor.md)
 
 ## Support Monolog Financially
 
