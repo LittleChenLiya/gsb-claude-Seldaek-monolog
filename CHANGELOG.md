@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Added `MultiTargetBufferHandler` which buffers records independently per named target and flushes each target as a separate batch: failed targets keep their exact batch and error for the next `flush()` retry, successful targets are never re-sent, records logged during a failure go out as the next batch, and per-target buffer limits report discards via a counter and callback
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)

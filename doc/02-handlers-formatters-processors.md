@@ -120,6 +120,16 @@
   for every log record.
 - [_GroupHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/GroupHandler.php): This handler groups other handlers. Every record received is
   sent to all the handlers it is configured with.
+- [_MultiTargetBufferHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/MultiTargetBufferHandler.php): This handler buffers records
+  independently for several named targets and flushes each target as a separate
+  batch via `handleBatch()`. A target that fails keeps its exact batch (plus the
+  error) and only the failed targets are retried on the next `flush()`; targets
+  that succeeded are never sent the same records again. Records logged while a
+  target is failing accumulate into that target's *next* batch and are only sent
+  after the pending retry succeeded. Each target buffer can be capped, and
+  overflows are reported through an explicit per-target discard counter and an
+  overflow callback. See [the multi-target buffer doc](multi-target-buffer.md)
+  for the batching and discard policy details.
 - [_FilterHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/FilterHandler.php): This handler only lets records of the given levels through
    to the wrapped handler.
 - [_SamplingHandler_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Handler/SamplingHandler.php): Wraps around another handler and lets you sample records
