@@ -1,3 +1,7 @@
+### 3.13.0 (unreleased)
+
+  * Added an opt-in contract processor chain (`Monolog\Processor\ContractProcessorChain`, `ProcessorContract`, `ContractedProcessor`) and `Monolog\Handler\AbstractContractProcessingHandler`: processors declare the LogRecord paths they may modify, run on an isolated candidate record, and out-of-contract changes block the handler write without touching the original record
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)
