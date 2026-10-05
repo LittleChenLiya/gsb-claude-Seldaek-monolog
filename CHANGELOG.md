@@ -1,3 +1,7 @@
+### Unreleased
+
+  * Added `EventTimeOrderHandler` which buffers records and delivers them to a wrapped handler in explicit event-time order using a watermark of "max accepted event time minus allowed lateness"; late records go to a dedicated callback, buffer-limit rejections never advance the watermark, downstream failures become explicit unknown handoffs without automatic resend, and `close()` reports any unfinished queue instead of pretending full delivery
+
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)
