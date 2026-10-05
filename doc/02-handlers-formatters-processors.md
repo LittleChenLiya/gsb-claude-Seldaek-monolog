@@ -183,6 +183,36 @@
 - [_TagProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/TagProcessor.php): Adds an array of predefined tags to a log record.
 - [_HostnameProcessor_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/HostnameProcessor.php): Adds the current hostname to a log record.
 
+### Processor contract chains
+
+The [_ContractChain_](https://github.com/Seldaek/monolog/blob/main/src/Monolog/Processor/Contract/ContractChain.php) wraps an ordered list of processors and enforces an explicit modification contract. Each processor declares the LogRecord paths it is allowed to modify via the `ContractualProcessorInterface` (e.g. `['extra']` or `['context.foo']`). The chain runs every processor on an independent deep-cloned candidate record, so the original record is never mutated, and verifies after each processor that no out-of-bounds change occurred. Any violation aborts the chain before any handler is written.
+
+```php
+use Monolog\Processor\Contract\ContractChain;
+use Monolog\Processor\Contract\ContractualProcessorInterface;
+use Monolog\LogRecord;
+
+$processorA = new class implements ContractualProcessorInterface {
+    public function allowedRecordPaths(): array { return ['extra']; }
+    public function __invoke(LogRecord $record): LogRecord {
+        return $record->with(extra: array_merge($record->extra, ['a' => 1]));
+    }
+};
+
+$processorB = new class implements ContractualProcessorInterface {
+    public function allowedRecordPaths(): array { return ['context']; }
+    public function __invoke(LogRecord $record): LogRecord {
+        return $record->with(context: array_merge($record->context, ['b' => 2]));
+    }
+};
+
+// Both processors run in order on the candidate record; the writer only receives
+// the result if every processor stayed within its declared paths.
+$logger->pushProcessor(new ContractChain([$processorA, $processorB]));
+```
+
+Scalars and arrays are verified deeply. Unknown mutable objects (not `DateTimeImmutable`, not a backed enum, and without a snapshot provider) make the whole record unverifiable: the chain aborts before invoking any processor, without calling any getter on them. Objects that need to be verified can implement `RecordObjectSnapshotInterface` or be passed a snapshot provider to the chain.
+
 ## Third Party Packages
 
 Third party handlers, formatters and processors are
