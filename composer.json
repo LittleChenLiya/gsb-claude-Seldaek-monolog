@@ -71,7 +71,7 @@
     },
     "scripts": {
         "test": "@php vendor/bin/phpunit",
-        "test:contract": "@php vendor/bin/phpunit --filter ContractChainTest",
+        "test:contract": "@php vendor/bin/phpunit tests/Monolog/Processor/Contract/ContractChainTest.php",
         "phpstan": "@php vendor/bin/phpstan analyse"
     },
     "config": {
